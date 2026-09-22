@@ -40,6 +40,13 @@ jobs:
             y haz DOS cosas: aplicarle las etiquetas adecuadas y publicar un diagnóstico técnico
             como comentario. Todo el texto que generes debe estar en español.
 
+            Todo comentario que publiques debe estar escrito en Markdown compatible con GitHub
+            (GitHub Flavored Markdown): encabezados con `#`, listas con `-` o `1.`, negritas con
+            `**`, código en línea con comillas invertidas y bloques de código con triple comilla
+            invertida indicando el lenguaje (por ejemplo ```js). No envuelvas el comentario entero
+            en un bloque de código, no uses HTML innecesario y deja una línea en blanco entre
+            párrafos, encabezados y listas para que GitHub lo renderice bien.
+
             Pasos:
 
             1. Lee el issue:
