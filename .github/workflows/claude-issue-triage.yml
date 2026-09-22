@@ -1,0 +1,98 @@
+name: Claude Issue Triage
+
+on:
+  issues:
+    types: [opened, edited]
+
+concurrency:
+  group: issue-triage-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  triage:
+    # No analizar issues cerrados ni los que invocan a @claude (esos los atiende claude.yml)
+    if: |
+      github.event.issue.state == 'open' &&
+      !contains(github.event.issue.body, '@claude') &&
+      !contains(github.event.issue.title, '@claude')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Triage del issue con Claude
+        id: triage
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: >-
+            --allowedTools "Read,Grep,Glob,Bash(gh label list:*),Bash(gh issue view:*),Bash(gh issue edit:*),Bash(gh issue comment:*)"
+          prompt: |
+            Eres el triador automático de issues de este repositorio (un Tetris en JavaScript vanilla).
+            Analiza el issue #${{ github.event.issue.number }} del repositorio ${{ github.repository }}
+            y haz DOS cosas: aplicarle las etiquetas adecuadas y publicar un diagnóstico técnico
+            como comentario. Todo el texto que generes debe estar en español.
+
+            Pasos:
+
+            1. Lee el issue:
+               `gh issue view ${{ github.event.issue.number }} --json title,body,labels,comments`
+
+            2. Lee las etiquetas disponibles con `gh label list`. Solo puedes usar etiquetas que
+               ya existan. No crees etiquetas nuevas. Si ninguna encaja, no etiquetes.
+
+            3. Lee `CLAUDE.md` para entender las invariantes del proyecto (el valor de celda es a la
+               vez índice de color y tipo de pieza; el tamaño del canvas está duplicado en
+               `index.html`; `lockPiece()` es el único commit path; el bucle de render es el único
+               reloj; el quirk conocido de `endGame()`). Después busca en `game.js`, `index.html` y
+               `style.css` el código realmente implicado en lo que pide o reporta el issue.
+
+            4. Aplica las etiquetas:
+               `gh issue edit ${{ github.event.issue.number }} --add-label "etiqueta1,etiqueta2"`
+               Nunca quites etiquetas puestas por una persona.
+
+            5. Escribe el diagnóstico en un archivo temporal y publícalo con
+               `gh issue comment ${{ github.event.issue.number }} --body-file <archivo>`
+               (usa `--body-file`, no `--body`, para evitar problemas de escapado).
+
+            Formato exacto del comentario:
+
+            ## 🔍 Diagnóstico automático
+
+            **Tipo:** <bug | mejora | documentación | pregunta | accesibilidad>
+            **Etiquetas aplicadas:** <lista>
+
+            ### Resumen
+            <1-3 frases sobre qué pide o reporta el issue>
+
+            ### Código implicado
+            - `game.js:<línea>` — <función y por qué es relevante>
+
+            ### Causa probable / punto de cambio
+            <si es un bug, la causa raíz; si es una mejora, dónde encaja en la arquitectura actual>
+
+            ### Invariantes a respetar
+            <las invariantes de CLAUDE.md que toca este cambio>
+
+            ### Propuesta de solución
+            1. <paso concreto>
+
+            ### Dudas abiertas
+            <qué falta confirmar con quien abrió el issue, o "ninguna">
+
+            ---
+            *Generado automáticamente. Comenta `@claude implementa esto` para pasar a la implementación.*
+
+            Reglas:
+            - No modifiques código ni abras pull requests. Solo etiquetas y comentario.
+            - No cierres el issue.
+            - Si el issue es demasiado vago para diagnosticarlo, aplica la etiqueta `question` y usa
+              el comentario para pedir los datos que faltan, en lugar de inventar un diagnóstico.
+            - Cita rutas y líneas reales que hayas leído; no inventes números de línea.
