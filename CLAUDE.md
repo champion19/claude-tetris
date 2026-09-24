@@ -22,10 +22,7 @@ Key invariants that span files/functions:
 - **The render loop is the only clock.** `loop()` accumulates `dt` and drops one row when `dropAccum >= dropInterval`; `dropAccum` is reset to `0` (not decremented), so a long frame loses the remainder. Level, `dropInterval`, and score are all recomputed inside `clearLines()`.
 - **`lockPiece()` is the single commit path** — `merge()` → `clearLines()` → `spawn()` — reached from gravity in `loop()`, from `softDrop()`, and from `hardDrop()`.
 - **Pause/resume restarts the rAF chain.** `togglePause()` calls `loop(lastTime)` directly on resume after resetting `lastTime`, so `dt` does not jump. Any new code path that stops the loop must do the same or the piece will teleport downward.
-
-## Known quirk
-
-`endGame()` calls `cancelAnimationFrame(animId)`, but when it is reached via `loop() → lockPiece() → spawn()`, the loop's own tail still schedules the next frame — so the game keeps simulating behind the Game Over overlay. Keep this in mind when touching loop or game-over handling.
+- **Game over stops the loop in two places.** `endGame()` calls `cancelAnimationFrame(animId)`, which only covers a pending frame (key-triggered drops). When game over happens via gravity inside `loop()`, that frame is already running, so `loop()` checks `gameOver` after `draw()` and returns without scheduling the next frame. Keep both when touching loop or game-over handling.
 
 ## Language
 
