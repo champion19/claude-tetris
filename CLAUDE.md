@@ -26,6 +26,9 @@ Key invariants that span files/functions:
 - **Pause menu blocks game input.** While `paused`, keydown ignores every game key (and `preventDefault`s Space/arrows outside the menu) and Tab is trapped inside the menu. `resumeGame()` clears `freshKeys`; afterwards an auto-repeat keydown (`e.repeat`) whose code has not had a fresh press since resume is dropped, so a key held through the menu cannot move the piece. Resume also blurs whatever element has focus so Space/Enter can't re-activate a button.
 - **Game over stops the loop in two places.** `endGame()` calls `cancelAnimationFrame(animId)`, which only covers a pending frame (key-triggered drops). When game over happens via gravity inside `loop()`, that frame is already running, so `loop()` checks `gameOver` after `draw()` and returns without scheduling the next frame. Keep both when touching loop or game-over handling.
 
+- **The game does not start on load.** The page shows `#start-screen` (records table + Jugar); `init()` runs only from the Jugar/Reiniciar buttons. Until then `current`/`board` are undefined, so the keydown handler bails out when `!current` (and when the event target is an `<input>`, so typing the player name never moves pieces or pauses). Anything new that reads game globals before the first `init()` must guard the same way.
+- **Records live in `localStorage['tetris-records']`** as `{ top: [{name, score, lines, combo, date}], bestCombo, maxLines }`, always read/written through `loadRecords()`/`saveRecords()` (try/catch + shape validation). `combo` counts consecutive locks that clear ≥1 line and is updated in `clearLines()` (which runs on every lock). `endGame()` updates `bestCombo`/`maxLines` and, if the score enters the top 5 (score > 0), sets `pendingRecord`; it is committed on name submit or by `init()` as "Anónimo". Player names are rendered with `textContent` only.
+
 ## Language
 
 UI strings, README, and comments are in Spanish. Match that when adding user-facing text.

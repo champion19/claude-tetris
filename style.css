@@ -26,6 +26,18 @@
   --menu-btn-text: #e0e0e0;
   --menu-btn-hover: #2e2e4a;
   --focus-ring: #9bbdff;
+  --table-border: #2a2a3a;
+  --table-head: #555570;
+  --table-text: #c8c8d8;
+  --highlight-bg: rgba(255, 213, 79, 0.18);
+  --highlight-text: #ffd54f;
+  --record-msg: #ffd54f;
+  --input-bg: #1a1a25;
+  --input-border: #3a3a5a;
+  --input-text: #e0e0e0;
+  --danger-border: #e57373;
+  --danger-text: #e57373;
+  --danger-hover-bg: rgba(229, 115, 115, 0.15);
 }
 
 [data-theme="light"] {
@@ -56,6 +68,18 @@
   --menu-btn-text: #23232f;
   --menu-btn-hover: #e4e4ee;
   --focus-ring: #3b5bdb;
+  --table-border: #d0d0de;
+  --table-head: #6b6b80;
+  --table-text: #23232f;
+  --highlight-bg: rgba(255, 179, 0, 0.22);
+  --highlight-text: #8a5a00;
+  --record-msg: #b7791f;
+  --input-bg: #ffffff;
+  --input-border: #c0c0d0;
+  --input-text: #23232f;
+  --danger-border: #c0392b;
+  --danger-text: #c0392b;
+  --danger-hover-bg: rgba(192, 57, 43, 0.1);
 }
 
 *, *::before, *::after {
@@ -92,6 +116,7 @@ body {
 
 .theme-toggle {
   position: absolute;
+  z-index: 3;
   top: 0;
   right: 0;
   width: 36px;
@@ -212,9 +237,13 @@ kbd {
   background: var(--overlay-bg);
   backdrop-filter: blur(4px);
   border-radius: 4px;
+  z-index: 2;
 }
 
-.overlay.hidden {
+.overlay.hidden,
+.gameover-panel.hidden,
+.name-form.hidden,
+.new-record-msg.hidden {
   display: none;
 }
 
@@ -239,8 +268,7 @@ kbd {
   color: var(--overlay-score);
 }
 
-#restart-btn {
-  margin-top: 8px;
+.btn-primary {
   background: var(--restart-bg);
   color: var(--restart-text);
   border: none;
@@ -253,7 +281,7 @@ kbd {
   transition: background 0.15s;
 }
 
-#restart-btn:hover {
+.btn-primary:hover {
   background: var(--restart-hover);
 }
 
@@ -356,4 +384,140 @@ kbd {
 .start-level-hint {
   font-size: 11px;
   color: var(--muted);
+}
+
+#restart-btn {
+  margin-top: 8px;
+}
+
+/* ---- Pantalla de inicio y tabla de records ---- */
+#start-screen {
+  background: var(--bg);
+  backdrop-filter: none;
+}
+
+.start-title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 8px;
+  color: var(--title-color);
+  text-shadow: 0 0 20px var(--title-shadow);
+  margin-bottom: 8px;
+}
+
+.records-heading {
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: var(--label-color);
+}
+
+.gameover-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.overlay-stats {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.new-record-msg {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--record-msg);
+}
+
+.records-table {
+  border-collapse: collapse;
+  font-size: 12px;
+  color: var(--table-text);
+  min-width: 340px;
+}
+
+.records-table th {
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: var(--table-head);
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--table-border);
+}
+
+.records-table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--table-border);
+  font-family: 'Courier New', Courier, monospace;
+  white-space: nowrap;
+}
+
+.records-table td:nth-child(2) {
+  font-family: inherit;
+  text-align: left;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.records-table tr.highlight td {
+  background: var(--highlight-bg);
+  color: var(--highlight-text);
+  font-weight: 700;
+}
+
+.records-table .empty-row td {
+  text-align: center;
+  font-family: inherit;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.records-best {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.name-form {
+  display: flex;
+  gap: 8px;
+}
+
+.name-form input {
+  background: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 14px;
+  width: 150px;
+  user-select: text;
+}
+
+.name-form .btn-primary {
+  padding: 8px 16px;
+}
+
+.overlay-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btn-danger {
+  background: transparent;
+  color: var(--danger-text);
+  border: 1px solid var(--danger-border);
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-danger:hover {
+  background: var(--danger-hover-bg);
 }

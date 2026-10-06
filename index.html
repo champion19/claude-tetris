@@ -76,11 +76,45 @@
       </div>
     </div>
 
+    <div id="start-screen" class="overlay">
+      <div class="overlay-box">
+        <p class="start-title">TETRIS</p>
+        <p class="records-heading">MEJORES PUNTUACIONES</p>
+        <table class="records-table">
+          <thead>
+            <tr><th>#</th><th>Nombre</th><th>Puntos</th><th>Líneas</th><th>Combo</th><th>Fecha</th></tr>
+          </thead>
+          <tbody id="start-records"></tbody>
+        </table>
+        <p class="records-best" id="start-best"></p>
+        <div class="overlay-actions">
+          <button id="play-btn" class="btn-primary">Jugar</button>
+          <button class="btn-danger reset-records-btn">Borrar records</button>
+        </div>
+      </div>
+    </div>
+
     <div id="overlay" class="overlay hidden">
       <div class="overlay-box">
         <p id="overlay-title">GAME OVER</p>
         <p id="overlay-score"></p>
-        <button id="restart-btn">Reiniciar</button>
+        <div id="gameover-panel" class="gameover-panel hidden">
+          <p id="overlay-stats" class="overlay-stats"></p>
+          <p id="new-record-msg" class="new-record-msg hidden"></p>
+          <form id="name-form" class="name-form hidden" autocomplete="off">
+            <input id="name-input" type="text" maxlength="12" placeholder="Tu nombre" aria-label="Nombre del jugador" />
+            <button type="submit" class="btn-primary">Guardar</button>
+          </form>
+          <table class="records-table">
+            <thead>
+              <tr><th>#</th><th>Nombre</th><th>Puntos</th><th>Líneas</th><th>Combo</th><th>Fecha</th></tr>
+            </thead>
+            <tbody id="over-records"></tbody>
+          </table>
+          <p class="records-best" id="over-best"></p>
+          <button class="btn-danger reset-records-btn">Borrar records</button>
+        </div>
+        <button id="restart-btn" class="btn-primary">Reiniciar</button>
       </div>
     </div>
   </div>
