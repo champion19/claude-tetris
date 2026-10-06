@@ -32,89 +32,24 @@
           <canvas id="next-canvas" width="120" height="120"></canvas>
         </div>
 
-        <div class="panel-section">
-          <label class="label" for="skin-select">SKIN</label>
-          <select id="skin-select" class="skin-select">
-            <option value="retro">Retro</option>
-            <option value="neon">Neon</option>
-            <option value="pastel">Pastel</option>
-            <option value="pixel">Pixel art</option>
-          </select>
-        </div>
-
         <div class="panel-section controls">
           <span class="label">CONTROLS</span>
           <ul>
             <li><kbd>←</kbd><kbd>→</kbd> mover</li>
-            <li><kbd>↑</kbd><kbd>X</kbd> rotar</li>
+            <li><kbd>↑</kbd> rotar</li>
             <li><kbd>↓</kbd> bajar</li>
             <li><kbd>Space</kbd> caída</li>
-            <li><kbd>P</kbd><kbd>Esc</kbd> pausa</li>
+            <li><kbd>P</kbd> pausa</li>
           </ul>
         </div>
       </aside>
-    </div>
-
-    <div id="pause-menu" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pause-title">
-      <div class="overlay-box pause-box">
-        <p id="pause-title">PAUSA</p>
-        <button type="button" id="resume-btn" class="menu-btn primary">Reanudar</button>
-        <button type="button" id="pause-restart-btn" class="menu-btn">Reiniciar</button>
-        <button type="button" id="controls-btn" class="menu-btn" aria-expanded="false" aria-controls="pause-controls">Ver controles</button>
-        <ul id="pause-controls" class="pause-controls hidden">
-          <li><kbd>←</kbd><kbd>→</kbd> mover</li>
-          <li><kbd>↑</kbd><kbd>X</kbd> rotar</li>
-          <li><kbd>↓</kbd> bajar</li>
-          <li><kbd>Space</kbd> caída</li>
-          <li><kbd>P</kbd><kbd>Esc</kbd> pausa / reanudar</li>
-        </ul>
-        <label class="start-level" for="start-level">
-          <span>Nivel inicial</span>
-          <select id="start-level"></select>
-        </label>
-        <p class="start-level-hint">Se aplica al reiniciar</p>
-      </div>
-    </div>
-
-    <div id="start-screen" class="overlay">
-      <div class="overlay-box">
-        <p class="start-title">TETRIS</p>
-        <p class="records-heading">MEJORES PUNTUACIONES</p>
-        <table class="records-table">
-          <thead>
-            <tr><th>#</th><th>Nombre</th><th>Puntos</th><th>Líneas</th><th>Combo</th><th>Fecha</th></tr>
-          </thead>
-          <tbody id="start-records"></tbody>
-        </table>
-        <p class="records-best" id="start-best"></p>
-        <div class="overlay-actions">
-          <button id="play-btn" class="btn-primary">Jugar</button>
-          <button class="btn-danger reset-records-btn">Borrar records</button>
-        </div>
-      </div>
     </div>
 
     <div id="overlay" class="overlay hidden">
       <div class="overlay-box">
         <p id="overlay-title">GAME OVER</p>
         <p id="overlay-score"></p>
-        <div id="gameover-panel" class="gameover-panel hidden">
-          <p id="overlay-stats" class="overlay-stats"></p>
-          <p id="new-record-msg" class="new-record-msg hidden"></p>
-          <form id="name-form" class="name-form hidden" autocomplete="off">
-            <input id="name-input" type="text" maxlength="12" placeholder="Tu nombre" aria-label="Nombre del jugador" />
-            <button type="submit" class="btn-primary">Guardar</button>
-          </form>
-          <table class="records-table">
-            <thead>
-              <tr><th>#</th><th>Nombre</th><th>Puntos</th><th>Líneas</th><th>Combo</th><th>Fecha</th></tr>
-            </thead>
-            <tbody id="over-records"></tbody>
-          </table>
-          <p class="records-best" id="over-best"></p>
-          <button class="btn-danger reset-records-btn">Borrar records</button>
-        </div>
-        <button id="restart-btn" class="btn-primary">Reiniciar</button>
+        <button id="restart-btn">Reiniciar</button>
       </div>
     </div>
   </div>
