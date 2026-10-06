@@ -738,6 +738,9 @@ document.addEventListener('keydown', e => {
   if (paused) {
     // Menú abierto: ninguna tecla de juego actúa.
     if (e.code === 'Tab') { trapMenuFocus(e); return; }
+    // Space nunca activa el botón enfocado (p. ej. Reanudar): evita volver al juego
+    // sin querer al seguir pulsando la tecla de caída. En el menú se usa Enter.
+    if (e.code === 'Space') { e.preventDefault(); return; }
     // Dentro del menú se permite la navegación por teclado (botones y selector)
     if (BLOCKED_KEYS.includes(e.code) && !pauseMenu.contains(e.target)) e.preventDefault();
     return;
@@ -771,7 +774,11 @@ document.addEventListener('keydown', e => {
   updateHUD();
 });
 
-document.addEventListener('keyup', e => freshKeys.delete(e.code));
+document.addEventListener('keyup', e => {
+  freshKeys.delete(e.code);
+  // Space activa los botones al soltarse: también se bloquea aquí con el menú abierto
+  if (paused && e.code === 'Space') e.preventDefault();
+});
 
 restartBtn.addEventListener('click', init);
 resumeBtn.addEventListener('click', resumeGame);
