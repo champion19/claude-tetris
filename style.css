@@ -149,6 +149,29 @@ body {
   border-radius: 4px;
 }
 
+/* ---- Selector de skin ---- */
+.skin-select {
+  background: var(--kbd-bg);
+  border: 1px solid var(--kbd-border);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 5px 6px;
+  cursor: pointer;
+}
+
+/* Neon: fondo negro en los canvas para que resalte el resplandor */
+[data-skin="neon"] #board,
+[data-skin="neon"] #next-canvas {
+  background: #000;
+  border-color: #1f1f3a;
+}
+
+[data-skin="neon"] #board {
+  box-shadow: 0 0 40px rgba(0, 240, 255, 0.25);
+}
+
 /* ---- Controles ---- */
 .controls ul {
   list-style: none;
