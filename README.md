@@ -44,6 +44,7 @@ Es una versión jugable del Tetris clásico con todas las mecánicas que esperar
 - **Niveles** que aumentan cada 10 líneas y aceleran la caída.
 - **Menú de pausa** (`P` o `Esc`) con Reanudar, Reiniciar, Ver controles y selector de **nivel inicial** para la próxima partida; bloquea los inputs del juego mientras está abierto.
 - **Game Over** con opción de reinicio.
+- **Pantalla de inicio** y **tabla de récords local** (`localStorage`): top 5 con nombre del jugador, líneas y mejor combo de cada partida, más el mejor combo y las líneas máximas históricas. Si la puntuación entra en el top se pide el nombre y la fila se resalta. Incluye botón para borrar los récords.
 
 ---
 
@@ -100,7 +101,7 @@ Define la estructura visual:
 
 - Un `<canvas id="board">` de **300 × 600** píxeles donde se renderiza el tablero.
 - Un panel lateral con `SCORE`, `LINES`, `LEVEL`, vista de la siguiente pieza y la lista de controles.
-- Un overlay de **GAME OVER** y otro para el **menú de pausa**.
+- Un overlay compartido para la **pantalla de inicio** y **GAME OVER**, con el formulario de nombre y la tabla de récords, y otro para el **menú de pausa**.
 
 ### 2. `style.css`
 
@@ -118,6 +119,8 @@ Contiene toda la lógica del juego. A grandes rasgos:
 - **Limpieza de líneas** (`clearLines`): recorre el tablero de abajo hacia arriba; cada fila completa se elimina y se inserta una vacía en la cima.
 - **Puntuación**: usa la tabla clásica `[0, 100, 300, 500, 800]` multiplicada por el nivel actual; el hard drop suma 2 puntos por celda recorrida y el soft drop 1 punto por fila.
 - **Nivel y velocidad**: el nivel es `max(nivel inicial, floor(líneas / 10) + 1)`; la velocidad de caída se calcula como `max(100, 1000 − (level − 1) × 90)` milisegundos.
+- **Combo**: cuenta piezas consecutivas que limpian al menos una línea; se guarda el máximo de la partida (`maxCombo`).
+- **Récords** (`loadRecords`, `recordRank`, `saveRecord`, `resetRecords`): se guardan en `localStorage` bajo la clave `tetris-records`.
 - **Ghost piece** (`ghostY`): proyecta la posición final de la pieza actual hacia abajo y la dibuja con `globalAlpha = 0.2`.
 
 ### Flujo del juego
