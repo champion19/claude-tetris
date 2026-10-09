@@ -12,7 +12,7 @@ Open the file directly (`open index.html`) or serve statically (`python3 -m http
 
 ## Architecture (`game.js`)
 
-All game logic lives in one file as module-level functions over shared `let` globals (`board`, `current`, `next`, `score`, `lines`, `level`, `paused`, `gameOver`, `dropAccum`, `dropInterval`, `animId`). No classes, no state object. `init()` resets every global and is also the restart-button handler.
+All game logic lives in one file as module-level functions over shared `let` globals (`board`, `current`, `next`, `score`, `lines`, `level`, `paused`, `gameOver`, `dropAccum`, `dropInterval`, `animId`, `combo`, `maxCombo`, `records`, `pendingRank`, `highlightIndex`). No classes, no state object. `init()` resets every per-game global and is also the restart/play-button handler.
 
 Key invariants that span files/functions:
 
@@ -22,6 +22,8 @@ Key invariants that span files/functions:
 - **The render loop is the only clock.** `loop()` accumulates `dt` and drops one row when `dropAccum >= dropInterval`; `dropAccum` is reset to `0` (not decremented), so a long frame loses the remainder. Level, `dropInterval`, and score are all recomputed inside `clearLines()`.
 - **`lockPiece()` is the single commit path** — `merge()` → `clearLines()` → `spawn()` — reached from gravity in `loop()`, from `softDrop()`, and from `hardDrop()`.
 - **Pause/resume restarts the rAF chain.** `togglePause()` calls `loop(lastTime)` directly on resume after resetting `lastTime`, so `dt` does not jump. Any new code path that stops the loop must do the same or the piece will teleport downward.
+- **The page opens on a start screen, not a running game.** `showStartScreen()` sets `gameOver = true` (meaning "no game in progress") so `keydown` and `togglePause()` ignore input; `current` is still `undefined` there, so nothing may call `draw()` before the first `init()`. The single `#overlay` is shared by start, pause and game over via `showOverlay()`; the records table is hidden only during pause.
+- **Records live in `localStorage` under `tetris-records`** as `{ top, bestCombo, maxLines }` (`top` sorted desc, max `MAX_RECORDS`). `endGame()` always updates `bestCombo`/`maxLines` and computes `pendingRank`; the top-5 entry is only inserted when the player submits the name form. Names are rendered with `textContent` — keep it that way. `combo` counts consecutive locks that clear lines and is updated in `clearLines()`, so it relies on `clearLines()` running on every lock.
 - **Game over stops the loop in two places.** `endGame()` calls `cancelAnimationFrame(animId)`, which only covers a pending frame (key-triggered drops). When game over happens via gravity inside `loop()`, that frame is already running, so `loop()` checks `gameOver` after `draw()` and returns without scheduling the next frame. Keep both when touching loop or game-over handling.
 
 ## Language
